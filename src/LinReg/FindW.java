@@ -16,16 +16,19 @@ public class FindW {
 	private double[] xArray;
 	private double[] tArray;
 	private int M;
+	private int lnLambda;
 	private String dataFile;
 
 	/**
 	 * Constructor for FindW 
 	 * @param M
 	 * @param trainingDataFile
+	 * @param lnLambda - value of lnLambda
 	 */
-	public FindW(int M, String trainingDataFile) {
+	public FindW(int M, String trainingDataFile, int lnLambda) {
 		this.M = M;
 		this.dataFile = trainingDataFile;
+		this.lnLambda = lnLambda;
 	}
 	
 	/**
@@ -68,27 +71,48 @@ public class FindW {
 			System.exit(-1);
 		}
 
-		// Find the Matrix A
-		Matrix A = findA(xArray, M);
+		// Without Regularization i.e lnLambda = 0 !
+		if(lnLambda == 0) {
+			// Find the Matrix A
+			Matrix A = findA(xArray, M);
 
-		// Find the Matrix T
-		Matrix T = findT(tArray, xArray, M);
+			// Find the Matrix T
+			Matrix T = findT(tArray, xArray, M);
 
-		// Find W from A inverse & T
-		Matrix W = multiply(A.inverse(), T);
+			// Find W from A inverse & T
+			Matrix W = multiply(A.inverse(), T);
 
-		/*		
-		System.out.println("Printing Matrix W");
-		for(int row=0; row<W.getRowDimension(); row++) {
-			for(int col=0; col<W.getColumnDimension(); col++){
-				System.out.print(W.get(row, col) + " ");
+			/*		
+			System.out.println("Printing Matrix W");
+			for(int row=0; row<W.getRowDimension(); row++) {
+				for(int col=0; col<W.getColumnDimension(); col++){
+					System.out.print(W.get(row, col) + " ");
+				}
+				System.out.println();
 			}
-			System.out.println();
+			*/
+			
+			// Return W matrix
+			return W;
 		}
-		*/
+		// With Regularization lnLambda != 0
+		else {
+			// Find phi matrix
+			Matrix phi = findPhi();
+			// Find T matrix
+			Matrix T = new Matrix(tArray, tArray.length);
+			// Find lambda * N * I
+			Matrix lambdaNI = (Matrix.identity(M+1, M+1)).times(xArray.length * Math.exp(lnLambda));
+			
+			// intermediate C = (lambdaNI + (phi transpose * phi)) inverse
+			Matrix C = (multiply(phi.transpose(), phi).plus(lambdaNI)).inverse();
+			
+			// Find W = C * phi transpose * T
+			Matrix W = multiply(C, multiply(phi.transpose(), T));
+			
+			return W;
+		}
 		
-		// Return W matrix
-		return W;
 	}
 
 	/**
@@ -217,6 +241,26 @@ public class FindW {
 
 		// return result
 		return result;
+	}
+	
+	/**
+	 * Find Matrix Phi ( used for regularization )
+	 * @return matrix Phi
+	 */
+	private Matrix findPhi() {
+		// Create new Matrix Phi
+		Matrix phi = new Matrix(xArray.length, M+1);
+		
+		// Fill the matrix - Dimensions: N x (M+1)
+		// M+1 feature vectors: w0 to wM
+		for(int i=0; i<xArray.length; i++) {
+			for(int j=0; j<M+1; j++) {
+				phi.set(i, j, Math.pow(xArray[i], j));
+			}
+		}
+		
+		// return matrix phi
+		return phi;
 	}
 
 }

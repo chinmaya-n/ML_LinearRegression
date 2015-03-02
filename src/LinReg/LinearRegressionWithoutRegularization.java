@@ -30,7 +30,7 @@ public class LinearRegressionWithoutRegularization {
 		// Find W for each M where M belongs to [0-9] & Erms Values
 		for(int m=0; m<=9; m++) {
 			// Find W
-			FindW findW = new FindW(m, trainingDataFile);
+			FindW findW = new FindW(m, trainingDataFile, 0);
 			Matrix W = findW.compute();
 
 			// Find Erms 
@@ -82,7 +82,7 @@ public class LinearRegressionWithoutRegularization {
 		buffer.write("legend(\"topleft\", c(\"Test\",\"Train\"), cex=0.8, col=c(\"blue\",\"red\"), lty=1:2, lwd=2, bty=\"n\")");
 
 		buffer.close();
-		System.out.println("Created graph: " + fileName + ".r"); 
+		System.out.println("Created graph: (in output directory)" + fileName + ".r"); 
 	}
 
 }

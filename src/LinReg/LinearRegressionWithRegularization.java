@@ -27,12 +27,14 @@ public class LinearRegressionWithRegularization {
 		String ermsTrainPoints = "";
 
 		// Find W for M=9; & let lambda belongs to [-50 to 0], now find Erms Values
-		// Find W
-		FindW findW = new FindW(9, trainingDataFile);
-		Matrix W = findW.compute();
+		
 		
 		// For lambda in [-50 to 0] with step 5 find Erms values
 		for(int l=-50; l<=0; l+=5) {
+			// Find W
+			FindW findW = new FindW(9, trainingDataFile, l);
+			Matrix W = findW.compute();
+			
 			// Find Erms
 			FindErms findErms = new FindErms();
 			double eRMStest = findErms.calculate(testDataFile, W, l);	// lambda = l 
@@ -76,14 +78,14 @@ public class LinearRegressionWithRegularization {
 		buffer.write("y2 <- c(" + y2Values + ")\n\n");
 
 		// Plot the graph
-		buffer.write("plot(x, y1, type='o', pch=2, col=\"blue\", xlab=\"ln Lambda\", ylab=\"ERMS\", ylim=c(0, 0.2), xlim=c(-50, 0)) \n");
+		buffer.write("plot(x, y1, type='o', pch=2, col=\"blue\", xlab=\"ln Lambda\", ylab=\"ERMS\", ylim=c(0, 1), xlim=c(-50, 0)) \n");
 		buffer.write("lines(x, y2, type='o', pch=20, col=\"red\", lty=2) \n");
 		
 		// Legend to the graph
-		buffer.write("legend(\"topleft\", c(\"Test\",\"Train\"), cex=0.8, col=c(\"blue\",\"red\"), lty=1:2, lwd=2, bty=\"n\")");
+		buffer.write("legend(\"topleft\", c(\"Validation Data\",\"Training Data\"), cex=0.8, col=c(\"blue\",\"red\"), lty=1:2, lwd=2, bty=\"n\")");
 
 		buffer.close();
-		System.out.println("Created graph: " + fileName + ".r"); 
+		System.out.println("Created graph (in output directory): " + fileName + ".r"); 
 	}
 
 }
