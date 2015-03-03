@@ -1,0 +1,18 @@
+TRAINING DATA FOR TRAINING & TEST ON TESTING DATA
+----------
+Given Traning File: C:\Users\cn262114\Documents\eclipse-workspace\ML_A1\data\train.dat
+Given Test File: C:\Users\cn262114\Documents\eclipse-workspace\ML_A1\data\test.dat
+ln Lambda: -50
+ERMS Value for the Testing Predictions: 0.050945142543143876
+
+TRAINING + VALIDATION DATA FOR TRAINING & TEST ON TESTING DATA
+----------
+Given Traning File: C:\Users\cn262114\Documents\eclipse-workspace\ML_A1\data\train_valid.dat
+Given Test File: C:\Users\cn262114\Documents\eclipse-workspace\ML_A1\data\test.dat
+ln Lambda: -50
+ERMS Value for the Testing Predictions: 0.028811278123970326
+
+Even with less data i.e nearly 10 data points, ERMS value is 0.051 on test data which is nearly negligible. This clearly shows our usage of lambda really paid off with better prediction even with less data.
+
+When the training data is increased (here doubled by including validation data), ERMS value is 0.029 on test data which is even better improvement from the previous case. So, having more examples seems to help in most times. 
+
