@@ -25,5 +25,4 @@ public class EvaluateModel {
 		System.out.println("ln Lambda: " + lnLambda);
 		System.out.println("ERMS Value for the Testing Predictions:" + erms.calculate(testDataFile, mW, lnLambda));
 	}
-
 }

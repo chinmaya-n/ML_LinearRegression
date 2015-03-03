@@ -12,7 +12,7 @@ import java.io.BufferedWriter;
 public class LinearRegressionWithRegularization {
 
 	/**
-	 * @param args
+	 * @param args - args[0] = Training data file ; args[1] = Test Data file
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
