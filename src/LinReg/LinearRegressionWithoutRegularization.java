@@ -30,7 +30,7 @@ public class LinearRegressionWithoutRegularization {
 		// Find W for each M where M belongs to [0-9] & Erms Values
 		for(int m=0; m<=9; m++) {
 			// Find W
-			FindW findW = new FindW(m, trainingDataFile, 0);
+			FindW findW = new FindW(m, trainingDataFile);
 			Matrix W = findW.compute();
 
 			// Find Erms 

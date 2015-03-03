@@ -32,8 +32,8 @@ public class LinearRegressionWithRegularization {
 		// For lambda in [-50 to 0] with step 5 find Erms values
 		for(int l=-50; l<=0; l+=5) {
 			// Find W
-			FindW findW = new FindW(9, trainingDataFile, l);
-			Matrix W = findW.compute();
+			FindW findW = new FindW(9, trainingDataFile);
+			Matrix W = findW.compute(l);
 			
 			// Find Erms
 			FindErms findErms = new FindErms();
@@ -52,7 +52,7 @@ public class LinearRegressionWithRegularization {
 		ermsTrainPoints = ermsTrainPoints.substring(0, ermsTrainPoints.length()-2);
 
 		// Generate Graph for R
-		createGraph(lPoints, ermsTestPoints, ermsTrainPoints, "M_vs_ERMS_withReg");
+		createGraph(lPoints, ermsTestPoints, ermsTrainPoints, "Lambda_vs_ERMS_withReg");
 	}
 
 	/**

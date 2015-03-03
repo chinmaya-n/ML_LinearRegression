@@ -15,8 +15,8 @@ public class EvaluateModel {
 		int lnLambda = Integer.parseInt(args[2]);
 		
 		// Get W for estimation
-		FindW w = new FindW(9, trainDataFile, lnLambda);
-		Matrix mW = w.compute();
+		FindW w = new FindW(9, trainDataFile);
+		Matrix mW = w.compute(lnLambda);
 		
 		// Find ERMS for testing data
 		FindErms erms = new FindErms();

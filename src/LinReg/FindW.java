@@ -7,7 +7,7 @@ import java.lang.String;
 import java.util.StringTokenizer;
 
 /**
- * Finds W i.e weights / coefficients
+ * Finds W vector i.e weights / coefficients
  * @author - cn262114
  */
 public class FindW {
@@ -16,23 +16,20 @@ public class FindW {
 	private double[] xArray;
 	private double[] tArray;
 	private int M;
-	private int lnLambda;
 	private String dataFile;
 
 	/**
 	 * Constructor for FindW 
 	 * @param M
 	 * @param trainingDataFile
-	 * @param lnLambda - value of lnLambda
 	 */
-	public FindW(int M, String trainingDataFile, int lnLambda) {
+	public FindW(int M, String trainingDataFile) {
 		this.M = M;
 		this.dataFile = trainingDataFile;
-		this.lnLambda = lnLambda;
 	}
 	
 	/**
-	 * Calculates the W matrix & returns it 
+	 * Calculates the W matrix without regularization parameter & returns it 
 	 * @param args
 	 * @throws IOException 
 	 */
@@ -71,18 +68,16 @@ public class FindW {
 			System.exit(-1);
 		}
 
-		// Without Regularization i.e lnLambda = 0 !
-		if(lnLambda == 0) {
-			// Find the Matrix A
-			Matrix A = findA(xArray, M);
+		// Find the Matrix A
+		Matrix A = findA();
 
-			// Find the Matrix T
-			Matrix T = findT(tArray, xArray, M);
+		// Find the Matrix T
+		Matrix T = findT();
 
-			// Find W from A inverse & T
-			Matrix W = multiply(A.inverse(), T);
+		// Find W from A inverse & T
+		Matrix W = multiply(A.inverse(), T);
 
-			/*		
+		/*		
 			System.out.println("Printing Matrix W");
 			for(int row=0; row<W.getRowDimension(); row++) {
 				for(int col=0; col<W.getColumnDimension(); col++){
@@ -90,31 +85,72 @@ public class FindW {
 				}
 				System.out.println();
 			}
-			*/
-			
-			// Return W matrix
-			return W;
-		}
-		// With Regularization lnLambda != 0
-		else {
-			// Find phi matrix
-			Matrix phi = findPhi();
-			// Find T matrix
-			Matrix T = new Matrix(tArray, tArray.length);
-			// Find lambda * N * I
-			Matrix lambdaNI = (Matrix.identity(M+1, M+1)).times(xArray.length * Math.exp(lnLambda));
-			
-			// intermediate C = (lambdaNI + (phi transpose * phi)) inverse
-			Matrix C = (multiply(phi.transpose(), phi).plus(lambdaNI)).inverse();
-			
-			// Find W = C * phi transpose * T
-			Matrix W = multiply(C, multiply(phi.transpose(), T));
-			
-			return W;
-		}
+		 */
+
+		// Return W matrix
+		return W;
 		
 	}
 
+	/**
+	 * Calculates the W matrix with regularization parameter & returns it 
+	 * @param args
+	 * @throws IOException 
+	 */
+	public Matrix compute(int lnLambda) throws IOException {
+
+		// Get the data values - Read the file
+		BufferedReader buffer = new BufferedReader(new FileReader(dataFile));
+		
+		// Create separate X, Y point sets
+		String xPoints = "", tPoints = "";
+
+		// Tokenize the (x, y) points - useful to find no of elements in each
+		for(String str; (str = buffer.readLine())!= null; ) {
+			StringTokenizer st = new StringTokenizer(str, " ");
+			xPoints += st.nextToken() + ", ";
+			tPoints += st.nextToken() + ", ";
+		}
+
+		// Populate the x, t values into arrays
+		StringTokenizer stX = new StringTokenizer(xPoints, ", ");
+		StringTokenizer stT = new StringTokenizer(tPoints, ", ");
+		xArray = new double[stX.countTokens()];
+		tArray = new double[stT.countTokens()];
+		if(xArray.length == tArray.length) {
+			int i=0;
+			while(stX.hasMoreTokens()) {
+				xArray[i] = Double.parseDouble(stX.nextToken());
+				tArray[i] = Double.parseDouble(stT.nextToken());
+				i++;
+			}
+			buffer.close();
+		}
+		else {
+			System.out.println("X, Y points did not match in count!! Provide Values correctly.");
+			buffer.close();
+			System.exit(-1);
+		}
+
+		// Find phi matrix
+		Matrix phi = findPhi();
+		
+		// Find T matrix
+		Matrix T = new Matrix(tArray, tArray.length);
+		
+		// Find lambda * N * I
+		Matrix lambdaNI = (Matrix.identity(M+1, M+1)).times(xArray.length * Math.exp(lnLambda));
+
+		// intermediate C = (lambdaNI + (phi transpose * phi)) inverse
+		Matrix C = (multiply(phi.transpose(), phi).plus(lambdaNI)).inverse();
+
+		// Find W = C * phi transpose * T
+		Matrix W = multiply(C, multiply(phi.transpose(), T));
+
+		return W;
+		
+	}
+	
 	/**
 	 * Multiply matrix A & B
 	 * @param A
@@ -152,22 +188,19 @@ public class FindW {
 
 	/**
 	 * Find Matrix A
-	 * @param xArray
-	 * @param m
 	 * @return Matrix A
 	 */
-	private Matrix findA(double[] xArray, int m) {
+	private Matrix findA() {
 
 		// M+1 = no of coefficients for polynomial i.e W
 		// M = order of polynomial 
 		// Create matrix A with dimensions dim x dim
-		int dim = m+1;
-		Matrix A = new Matrix(dim, dim);
+		Matrix A = new Matrix(M+1, M+1);
 
 		// Compute only for upper triangle of the Matrix A.
-		for(int i=0; i<dim; i++) {
-			for(int j=i; j<dim; j++) {
-				double aij = computeAij(xArray, i, j);
+		for(int i=0; i<M+1; i++) {
+			for(int j=i; j<M+1; j++) {
+				double aij = computeAij(i, j);
 				A.set(i, j, aij); // ij = 0, 0 => 1,1 position 
 				A.set(j, i, aij);
 			}
@@ -179,12 +212,11 @@ public class FindW {
 
 	/**
 	 * Calculate Values for matrix A
-	 * @param xArray
 	 * @param i
 	 * @param j
 	 * @return Aij value for Matrix A
 	 */
-	private double computeAij(double[] xArray, int i, int j) {
+	private double computeAij(int i, int j) {
 
 		// result
 		double result = 0;
@@ -202,21 +234,16 @@ public class FindW {
 
 	/**
 	 * Find Matrix T
-	 * @param tArray
-	 * @param xArray
-	 * @param m
 	 * @return Matrix T
 	 */
-	private Matrix findT(double[] tArray, double[] xArray, int m) {
+	private Matrix findT() {
 
-		// dimention
-		int dim = m+1;
 		// Matrix T
-		Matrix T = new Matrix(dim, 1);
+		Matrix T = new Matrix(M+1, 1);
 
 		// Populate the matrix
-		for(int i=0; i<dim; i++) {
-			T.set(i, 0, computeTi(tArray, xArray, i));
+		for(int i=0; i<M+1; i++) {
+			T.set(i, 0, computeTi(i));
 		}
 
 		// return matrix
@@ -225,12 +252,10 @@ public class FindW {
 
 	/**
 	 * Calculate Values for matrix T
-	 * @param tArray
-	 * @param xArray
 	 * @param i
 	 * @return Ti value for Matrix T
 	 */
-	private double computeTi(double[] tArray, double[] xArray, int i) {
+	private double computeTi(int i) {
 		// result
 		double result=0;
 
