@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 
 /**
  * Finds W i.e weights / coefficients
- * @author  Chinmaya R Naguri - cn262114
+ * @author - cn262114
  */
 public class FindW {
 

@@ -7,7 +7,7 @@ import java.io.BufferedWriter;
 
 /**
  * Calculates M vs ERMS values with out regularization  
- * @author  Chinmaya R Naguri - cn262114
+ * @author - cn262114
  */
 public class LinearRegressionWithoutRegularization {
 

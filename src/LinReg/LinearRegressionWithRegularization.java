@@ -7,7 +7,7 @@ import java.io.BufferedWriter;
 
 /**
  * Calculates Lambda vs ERMS values i.e with regularization where M=9
- * @author  Chinmaya R Naguri - cn262114
+ * @author - cn262114
  */
 public class LinearRegressionWithRegularization {
 

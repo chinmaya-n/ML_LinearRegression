@@ -7,7 +7,7 @@ import weka.core.matrix.Matrix;
 
 /**
  * Finds ERMS value for a given test data & W
- * @author  Chinmaya R Naguri - cn262114
+ * @author - cn262114
  */
 public class FindErms {
 

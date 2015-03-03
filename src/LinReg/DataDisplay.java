@@ -10,7 +10,7 @@ import java.io.BufferedWriter;
 
 /**
  * Writes the data into .R file to create a graph
- * @author  Chinmaya R Naguri - cn262114
+ * @author - cn262114
  */
 public class DataDisplay {
 
