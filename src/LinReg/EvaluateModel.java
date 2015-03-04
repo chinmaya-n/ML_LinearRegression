@@ -20,7 +20,7 @@ public class EvaluateModel {
 		
 		// Find ERMS for testing data
 		FindErms erms = new FindErms();
-		System.out.println("Given Traning File: " + trainDataFile);
+		System.out.println("Given Training File: " + trainDataFile);
 		System.out.println("Given Test File: " + testDataFile);
 		System.out.println("ln Lambda: " + lnLambda);
 		System.out.println("ERMS Value for the Testing Predictions:" + erms.calculate(testDataFile, mW, lnLambda));

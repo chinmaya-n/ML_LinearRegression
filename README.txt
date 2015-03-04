@@ -6,7 +6,7 @@ Use DataDisplay.java to plot the graphs for given dataset.
 args = list of locations of data sets (.dat files) to plot.
 
 5.(c)
-Use LinearRegressionWithoutRegularization.java to plot the graphs for M vs ERMS
+Use "LinearRegressionWithoutRegularization.java" to plot the graphs for M vs ERMS
 args -> args[0] = Training data file ; args[1] = Test Data file
 Plots graph for M = 0 to 9
 
@@ -19,7 +19,7 @@ Plots graph for M = 0 to 9
 		train_valid.dat is the aggregate of training and validation data sets into a single file
 		"Result: Plots graph for M vs ERMS" -> M_vs_ERMS_NoReg.r
 
-Use LinearRegressionWithRegularization.java to plot the graphs for ln lambda vs ERMS.
+Use "LinearRegressionWithRegularization.java" to plot the graphs for ln lambda vs ERMS.
 For M = 9. 
 
 	3)  Find Best lambda by testing on validation data & training on training data
@@ -29,7 +29,7 @@ For M = 9.
 		
 		Report ERMS Values for the following with the best lambda obtained from the previous graph.
 		i.e. here (for given data) ln lambda = -50;
-		Use EvaluateModel.java to get the ERMS values
+		Use "EvaluateModel.java" to get the ERMS values
 		args ->	args[0] = Training .dat file
 				args[1] = Tesing .dat file
 				args[2] = ln Lambda ( = -50)
